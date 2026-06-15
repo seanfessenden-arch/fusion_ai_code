@@ -132,7 +132,8 @@ class MyCamera:
     #end draw_triangle
 
     def draw_fps(self, frame):
-        cv2.putText(frame,f"FPS: {self.fps:.1f}",(10, 30),cv2.FONT_HERSHEY_SIMPLEX,1.0,(0, 255, 0),2)
+        #cv2.putText(img, text, org, fontFace, fontScale, color, thickness, lineType, bottomLeftOrigin)
+        cv2.putText(frame,f"FPS: {self.fps:.1f}",(5, self.HEIGHT-5),cv2.FONT_HERSHEY_SIMPLEX,0.5,(255, 255, 255),1)
     #end draw_fps
 
     def draw_text(self, frame):

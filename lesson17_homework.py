@@ -17,9 +17,10 @@ win_Height = 720
 if __name__ == "__main__":
     myCam = MyCamera(win_Width, win_Height, "Test Picture")
     t = th.Thread(target=myCam.capture_video, daemon=False)
-    t.start()
     print("Waiting for thread to start ...")
-    tts.say("Say box")
+    t.start()
+    
+    tts.say("Say a Key word. They are: box, text, triangle, cross hair, detect or QUIT")
 
     try:
         while not quit_event.is_set():
