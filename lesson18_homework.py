@@ -20,7 +20,7 @@ if __name__ == "__main__":
     print("Waiting for thread to start ...")
     t.start()
     
-    tts.say("Say QUIT to end program")
+    tts.say("Say QUIT to end program, that exits the program")
 
     try:
         while not quit_event.is_set():
