@@ -9,8 +9,6 @@ class MyCamera:
     picture = "Picture"
     video = "Video"
     video_small = "Video_small"
-    video_gray_small = "Video_gray_small"
-    gray_frames = ("Video_gray_small1", "Video_gray_small2", "Video_gray_small3", "Video_gray_small4", "Video_gray_small5" )
     NONE = 0
     BOX = 1
     TRIANGLE = 2
@@ -75,36 +73,21 @@ class MyCamera:
         top_bar =60
         bottom_bar = 25
 
-        cv2.namedWindow(MyCamera.video, cv2.WINDOW_GUI_NORMAL)
-        cv2.resizeWindow(MyCamera.video, self.WIDTH, self.HEIGHT)
-        cv2.moveWindow(MyCamera.video,0,top_bar)
-
+        cv2.namedWindow(MyCamera.video)
+        cv2.moveWindow(MyCamera.video, 0, 60)
+        
+        cv2.namedWindow(MyCamera.video_small)
         cv2.namedWindow(MyCamera.video_small, cv2.WINDOW_GUI_NORMAL)
-        cv2.resizeWindow(MyCamera.video_small,  int(self.WIDTH/2), int(self.HEIGHT/2))
-        cv2.moveWindow(MyCamera.video_small,0,top_bar + bottom_bar + self.HEIGHT)
-            
-        cv2.namedWindow(MyCamera.video_gray_small, cv2.WINDOW_GUI_NORMAL)
-        cv2.resizeWindow(MyCamera.video_gray_small, int(self.WIDTH/2), int(self.HEIGHT/2))
-        cv2.moveWindow(MyCamera.video_gray_small,int(self.WIDTH/2),top_bar + bottom_bar + self.HEIGHT)
+        cv2.resizeWindow(MyCamera.video_small,int(self.WIDTH/2), int(self.HEIGHT/2))
+        cv2.moveWindow(MyCamera.video_small, 0, top_bar + bottom_bar + self.HEIGHT)
         
-        #Show 5 of the same gray windows to the right
-        yOffset = self.HEIGHT/4
-        yPos = 0
-        for frameName in MyCamera.gray_frames:
-            cv2.namedWindow(frameName, cv2.WINDOW_GUI_NORMAL)
-            cv2.resizeWindow(frameName, int(self.WIDTH/4), int(self.HEIGHT/4))
-            cv2.moveWindow(frameName,int(self.WIDTH),top_bar  + int(yPos))
-            yPos = yPos + yOffset + bottom_bar
-        
-        #start setup of the Frames Per Second
         frame_count = 0
         start_time = perf_counter()
         fps = 0
     
         while self.running:
             frame = self.piCam.capture_array()
-            frameSmall=cv2.resize(frame,(int(self.WIDTH/2),int(self.HEIGHT/2)))
-            frameGraySmall = cv2.cvtColor(frameSmall,cv2.COLOR_BGR2GRAY)
+            frame_small = cv2.resize(frame, int(self.WIDTH/2), int(self.HEIGHT/2)))
             
             #Track the FPS, count the frames, then if more than 1 sec has passed, divide
             #the number of frames by the elapsed time to get FPS
@@ -118,28 +101,23 @@ class MyCamera:
             self.draw_fps(frame)
             
             match self.overlay:
-#                 case MyCamera.BOX:
-#                     self.draw_box(frame)
-#                 case MyCamera.TRIANGLE:
-#                     self.draw_triangle(frame)
-#                 case MyCamera.TEXT
-#                     self.draw_text(frame)
-#                 case MyCamera.CROSSHAIR:
-#                     self.draw_crosshair(frame)
-#                 case MyCamera.DETECTION:
-#                     self.draw_detections(frame)
-#                 case MyCamera.BOUNCE:
-#                     self.draw_bouncing_box(frame)
+                case MyCamera.BOX:
+                    self.draw_box(frame)
+                case MyCamera.TRIANGLE:
+                    self.draw_triangle(frame)
+                case MyCamera.TEXT:
+                    self.draw_text(frame)
+                case MyCamera.CROSSHAIR:
+                    self.draw_crosshair(frame)
+                case MyCamera.DETECTION:
+                    self.draw_detections(frame)
+                case MyCamera.BOUNCE:
+                    self.draw_bouncing_box(frame)
                 case MyCamera.CONVERT:
                     self.draw_convert(frame)
                 case _:
                     pass
             cv2.imshow(MyCamera.video, frame)
-            cv2.imshow(MyCamera.video_small,frameSmall)
-            cv2.imshow(MyCamera.video_gray_small,frameGraySmall)
-            
-            for frameName in MyCamera.gray_frames:
-                cv2.imshow(frameName,frameGraySmall)
             
             if cv2.waitKey(1) == ord('q'): #need the '1' so that the loop will work
                 break
@@ -218,6 +196,9 @@ class MyCamera:
         
     def draw_convert(self, frame):
         frame_h, frame_w = frame.shape[:2]
+        self.bouncing_box.update(frame_w, frame_h)
+        #print(self.bouncing_box)
+        self.bouncing_box.draw(frame)
         
         
     def stop(self):
@@ -226,7 +207,7 @@ class MyCamera:
         print("Exiting program")
         
 if __name__ == "__main__":
-    myCam = MyCamera(640, 360, "Test MyCamera")
+    myCam = MyCamera(640, 480, "Test MyCamera")
 
     videoThread = th.Thread(target=myCam.capture_video, daemon = False)
     videoThread.start()

@@ -11,8 +11,8 @@ stt = STT(language="en-us")
 tts = Piper()
 tts.set_model('en_US-kristin-medium')
 
-win_Width = 1280
-win_Height = 720
+win_Width = 640
+win_Height = 360
 
 if __name__ == "__main__":
     myCam = MyCamera(win_Width, win_Height, "Bouncing Box")
