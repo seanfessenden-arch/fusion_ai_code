@@ -128,8 +128,8 @@ class MyCamera:
 #                     self.draw_crosshair(frame)
 #                 case MyCamera.DETECTION:
 #                     self.draw_detections(frame)
-#                 case MyCamera.BOUNCE:
-#                     self.draw_bouncing_box(frame)
+                case MyCamera.BOUNCE:
+                     self.draw_bouncing_box(frame)
                 case MyCamera.CONVERT:
                     self.draw_convert(frame)
                 case _:

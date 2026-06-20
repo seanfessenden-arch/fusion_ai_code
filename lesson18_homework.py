@@ -31,7 +31,7 @@ if __name__ == "__main__":
                     myCam.stop()
                     quit_event.set()
                 case "convert":
-                    myCam.overlay = MyCamera.CONVERT
+                    myCam.overlay = MyCamera.BOUNCE
         t.join()
         print("Exiting program ...")
     except KeyboardInterrupt:
